@@ -118,6 +118,7 @@
     <button class="tab"    data-view="game">🎮 게임</button>
     <button class="tab"    data-view="practice">✏️ 연습 8문항</button>
     <button class="tab"    data-view="exam">🏁 종합시험 20문항</button>
+    <button class="tab"    data-view="board">📽️ 전자칠판</button>
     <button class="tab"    data-view="wrong">📕 오답노트</button>
   </div>
 
@@ -1283,6 +1284,7 @@ function render(view){
   if(view==='game')     return renderGameMenu(v);
   if(view==='practice') return startQuiz(v,'practice');
   if(view==='exam')     return startQuiz(v,'exam');
+  if(view==='board')    return renderBoard(v);
   if(view==='wrong')    return renderWrong(v);
 }
 
@@ -1800,6 +1802,24 @@ function mountSubmit(pct, correct, total, sec, part, wrongList){
 }
 
 /* ── 오답노트 ── */
+/* ── 📽️ 전자칠판 — 원고는 lesson.js, 화면은 공용 board.js ──
+      선생님이 앞에서 끌고 가는 화면입니다. 학생용 화면과 내용이 어긋나지 않도록
+      코드 슬라이드는 lesson.js 가 위의 CODES 를 그대로 읽어 만듭니다. */
+function renderBoard(v){
+  v.appendChild(el('<div class="card"><b>📽️ 전자칠판 · 수업 슬라이드</b><br>' +
+    '<span class="muted">전자칠판·프로젝터로 앞에서 끌고 가는 화면입니다. ' +
+    '<b>G·M 코드는 한 장에 하나씩</b> 나옵니다.</span></div>'));
+  var home = el('<div></div>');
+  v.appendChild(home);
+  if(!window.Board || !(window.LESSON||[]).length){
+    home.innerHTML = '<div class="card muted">수업자료를 불러오지 못했습니다. ' +
+                     'lesson.js · board.js 가 있는지 확인하세요.</div>';
+    return;
+  }
+  Board.home(home, { hint:'요점 안의 <b>파란 빈칸</b>은 눌러야 답이 열립니다 — ' +
+    '학생에게 먼저 물어보세요. 넘기기는 <b>[◀] [다음] [▶] 단추와 ← → 키</b>만 듣습니다.' });
+}
+
 function renderWrong(v){
   if(!ST.wrong.length){
     v.appendChild(el('<div class="empty">🗒️ 아직 오답이 없어요!<br>' +
@@ -1827,6 +1847,18 @@ function renderWrong(v){
                             CODES.length + '개 · 게임 3 · 문항 ' + QUESTIONS.length;
 })();
 render('learn');
+</script>
+
+<!-- 수업 슬라이드(전자칠판) — 원고는 lesson.js, 화면은 공용 board.js -->
+<!-- lesson.js 는 위 인라인 스크립트의 CODES 를 읽으므로 반드시 그 뒤에 둡니다 -->
+<script src="lesson.js"></script>
+<script src="board.js"></script>
+<script>
+/* 슬라이드 수는 lesson.js 가 붙은 뒤에야 셀 수 있어 여기에서 덧붙입니다 */
+(function(){
+  var n = (window.LESSON || []).length, h = document.getElementById('hdSub');
+  if(n && h) h.textContent += ' · 📽️ 슬라이드 ' + n;
+})();
 </script>
 
 <!-- 공용 위젯 — 순서 그대로 두세요 (규약 1 · 3 · 3-1) -->
