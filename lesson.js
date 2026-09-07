@@ -1,8 +1,8 @@
 /* ══════════════════════════════════════════════════════════════
-   CNC·컴퓨터응용가공 전자칠판 수업자료 — 슬라이드 원고
+   CNC·컴퓨터응용가공 수업 슬라이드 — 원고
 
-   index.html 의 「📽️ 전자칠판」 화면에서 공용 board.js 가
-   window.LESSON / window.UNITS 로 읽는다.
+   index.html 의 「📽️ 수업 슬라이드」 화면이 window.LESSON / window.UNITS 로 읽어
+   links 의 공용 board-pro.js 에 넘긴다.
 
    ▸ 코드 슬라이드는 손으로 적지 않는다
      index.html 의 `CODES`(도감 원천) 를 그대로 읽어 **코드 하나에 슬라이드 한 장**을 만든다.
@@ -336,7 +336,7 @@
     ['선반', '머시닝센터', '공통'].forEach(function (m) {
       var rows = CODES.filter(function (r) { return r.m === m; });
       if (!rows.length) return;
-      /* 단원 이름에 개수를 적지 않는다 — board.js 가 「슬라이드 N장」 을 따로 붙이므로
+      /* 단원 이름에 개수를 적지 않는다 — 메뉴가 「슬라이드 N장」 을 따로 붙이므로
          두 숫자가 어긋나 보인다(코드 41 개 + 안내 1 장 = 슬라이드 42 장). */
       var u = UNAME[m];
 

@@ -118,7 +118,7 @@
     <button class="tab"    data-view="game">🎮 게임</button>
     <button class="tab"    data-view="practice">✏️ 연습 8문항</button>
     <button class="tab"    data-view="exam">🏁 종합시험 20문항</button>
-    <button class="tab"    data-view="board">📽️ 전자칠판</button>
+    <button class="tab"    data-view="board">📽️ 수업 슬라이드</button>
     <button class="tab"    data-view="wrong">📕 오답노트</button>
   </div>
 
@@ -1802,22 +1802,47 @@ function mountSubmit(pct, correct, total, sec, part, wrongList){
 }
 
 /* ── 오답노트 ── */
-/* ── 📽️ 전자칠판 — 원고는 lesson.js, 화면은 공용 board.js ──
-      선생님이 앞에서 끌고 가는 화면입니다. 학생용 화면과 내용이 어긋나지 않도록
+/* ── 📽️ 수업 슬라이드 — 원고는 lesson.js, 화면은 links 의 공용 board-pro.js ──
+      선생님이 앞에서 끌고 가는 화면입니다. 뷰어 사본을 이 저장소에 두지 않는다 —
+      고칠 일이 생기면 links 저장소의 board-pro.js 하나만 고친다.
+      학생용 화면과 내용이 어긋나지 않도록
       코드 슬라이드는 lesson.js 가 위의 CODES 를 그대로 읽어 만듭니다. */
 function renderBoard(v){
-  v.appendChild(el('<div class="card"><b>📽️ 전자칠판 · 수업 슬라이드</b><br>' +
-    '<span class="muted">전자칠판·프로젝터로 앞에서 끌고 가는 화면입니다. ' +
-    '<b>G·M 코드는 한 장에 하나씩</b> 나옵니다.</span></div>'));
-  var home = el('<div></div>');
-  v.appendChild(home);
-  if(!window.Board || !(window.LESSON||[]).length){
-    home.innerHTML = '<div class="card muted">수업자료를 불러오지 못했습니다. ' +
-                     'lesson.js · board.js 가 있는지 확인하세요.</div>';
+  v.appendChild(el('<div class="card"><b>📽️ 수업 슬라이드</b><br>' +
+    '<span class="muted">프로젝터·큰 화면으로 앞에서 끌고 가는 화면입니다. ' +
+    '<b>G·M 코드는 한 장에 하나씩</b> 나옵니다. ' +
+    '요점 속 <b>파란 빈칸</b>은 눌러야 답이 열립니다 — 학생에게 먼저 물어보세요.</span></div>'));
+  if(!window.BoardPro || !(window.LESSON||[]).length){
+    v.appendChild(el('<div class="card muted">수업자료를 불러오지 못했습니다. ' +
+                     'lesson.js 가 있는지 확인하세요.</div>'));
     return;
   }
-  Board.home(home, { hint:'요점 안의 <b>파란 빈칸</b>은 눌러야 답이 열립니다 — ' +
-    '학생에게 먼저 물어보세요. 넘기기는 <b>[◀] [다음] [▶] 단추와 ← → 키</b>만 듣습니다.' });
+  var btn = el('<button class="btn btn-primary" style="width:100%;padding:14px;font-size:16px">' +
+               '📽️ 수업 슬라이드 열기 (선생님용) →</button>');
+  btn.onclick = openBoard;
+  v.appendChild(btn);
+}
+
+function openBoard(){
+  var ALL = window.LESSON || [], U = window.UNITS || [];
+  var menu = U.map(function(u){
+    return { icon:'📘', title:u.name,
+             desc:'슬라이드 ' + u.idx.length + '장',
+             run:{ kind:'lesson', deck:u.idx.map(function(i){ return ALL[i]; }) } };
+  });
+  menu.push({ icon:'📚', wide:true, title:'전체 이어서 (' + ALL.length + '장)',
+              desc:'CNC 선반 → 머시닝센터 → 공통 M코드 순서로 진행합니다.',
+              run:{ kind:'lesson', deck:ALL } });
+  menu.push({ icon:'⬜', wide:true, title:'빈 칠판',
+              desc:'슬라이드 없이 판서만. 공구경로나 좌표를 직접 그려 설명할 때.',
+              run:{ kind:'blank' } });
+
+  BoardPro.open({
+    title:'📽️ CNC·컴퓨터응용가공 · 수업 슬라이드',
+    sub:'요점 → <b>발문</b> → 퀴즈 → 정답을 하나씩 엽니다. 화면 어디든 바로 판서됩니다.<br>' +
+        '요점 속 <b>파란 빈칸</b>은 눌러야 답이 보입니다.',
+    menu: menu
+  });
 }
 
 function renderWrong(v){
@@ -1849,10 +1874,11 @@ function renderWrong(v){
 render('learn');
 </script>
 
-<!-- 수업 슬라이드(전자칠판) — 원고는 lesson.js, 화면은 공용 board.js -->
-<!-- lesson.js 는 위 인라인 스크립트의 CODES 를 읽으므로 반드시 그 뒤에 둡니다 -->
+<!-- 수업 슬라이드 — 원고(lesson.js) 는 이 저장소 것, 화면(board-pro.js) 은 links 의 공용 파일이다.
+     저장소에 사본을 두지 않는다. 화면을 고쳐야 하면 links 저장소에서 고친다.
+     lesson.js 는 위 인라인 스크립트의 CODES 를 읽으므로 반드시 그 뒤에 둡니다 -->
 <script src="lesson.js"></script>
-<script src="board.js"></script>
+<script src="https://hongyul67-cpu.github.io/links/board-pro.js"></script>
 <script>
 /* 슬라이드 수는 lesson.js 가 붙은 뒤에야 셀 수 있어 여기에서 덧붙입니다 */
 (function(){
@@ -1865,7 +1891,6 @@ render('learn');
 <script src="https://hongyul67-cpu.github.io/links/collector.js"  data-tool="CNC·컴퓨터응용가공"></script>
 <script src="https://hongyul67-cpu.github.io/links/fx.js"></script>
 <script src="https://hongyul67-cpu.github.io/links/rank.js"       data-tool="CNC·컴퓨터응용가공" data-pace="class"></script>
-<script src="https://hongyul67-cpu.github.io/links/class-mode.js"></script>
 <script src="https://hongyul67-cpu.github.io/links/reset.js"></script>
 <script src="https://hongyul67-cpu.github.io/links/backbar.js"></script>
 </body>
