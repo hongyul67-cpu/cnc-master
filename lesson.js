@@ -39,7 +39,14 @@
   function svg(w, h, body) {
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" ' +
       'style="max-height:34vh" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">' +
+      /* 흰 종이 바탕 — 공용 뷰어의 그림 칸이 어두워 바탕이 없으면 회색 글자가 묻힌다 */
+      '<rect x="1" y="1" width="' + (w - 2) + '" height="' + (h - 2) + '" rx="12" fill="#fff" stroke="#e5e7eb" stroke-width="2"/>' +
       body + '</svg>';
+  }
+  /* 배우기와 같은 그림 — figs.js(links/fig.js) 에 있으면 그것을, 없으면 이 파일의 옛 그림을 쓴다.
+     슬라이드는 빈칸이 정답이라 그림의 정답 이름표(ans)를 ? 로 가린다(labels:false). */
+  function shared(key, fallback) {
+    return (global.FIG && global.FIG.has && global.FIG.has(key)) ? global.FIG.svgOf(key, { labels: false }) : fallback;
   }
   function tx(x, y, s, o) {
     o = o || {};
@@ -93,7 +100,7 @@
 
   L.push({
     u: U1, t: '프로그램은 블록이 쌓인 것',
-    svg: svg(560, 178,
+    svg: shared('block', svg(560, 178,
       box(16, 16, 528, 46, '#fff') +
       tx(30, 46, 'G01  X50.0  Z-30.0  F0.2  ;', { size: 24, b: 1, mono: 1 }) +
       tx(30, 92, '워드 = 어드레스(영문자) + 수치', { size: 15, b: 1 }) +
@@ -108,7 +115,7 @@
       tx(376, 148, '이송', { size: 13, a: 'middle', c: C.dim }) +
       box(438, 104, 106, 56, C.bothBg, C.both) +
       tx(491, 128, ';', { size: 22, b: 1, a: 'middle', c: C.both, mono: 1 }) +
-      tx(491, 148, '블록 끝', { size: 13, a: 'middle', c: C.dim })),
+      tx(491, 148, '블록 끝', { size: 13, a: 'middle', c: C.dim }))),
     pts: [
       '<b>워드</b> = 어드레스(영문자) + 수치. 워드가 모여 <b>블록</b> 한 줄이 된다',
       '블록의 끝은 <b>EOB</b> — 화면에는 {{ ; }} 로 찍힌다',
@@ -120,13 +127,13 @@
 
   L.push({
     u: U1, t: '모달과 원샷 — 코드가 살아 있는 기간',
-    svg: svg(560, 176,
+    svg: shared('modal', svg(560, 176,
       tx(16, 30, '모달 (그룹 01 · 06 · 07 …) — 바뀔 때까지 계속 살아 있다', { size: 15, b: 1, c: C.ok }) +
       box(16, 42, 528, 42, '#ecfdf5', C.ok) +
       tx(28, 68, 'G01 X50. F0.2 ;   X70. ;   X90. ;   ← G01 과 F 가 계속 듣는다', { size: 15, mono: 1 }) +
       tx(16, 116, '원샷 = 그룹 00 — 그 블록에서만 듣는다', { size: 15, b: 1, c: C.warn }) +
       box(16, 128, 528, 42, '#fef2f2', C.warn) +
-      tx(28, 154, 'G04 P1000 ;   ← 다음 블록에는 남지 않는다', { size: 15, mono: 1 })),
+      tx(28, 154, 'G04 P1000 ;   ← 다음 블록에는 남지 않는다', { size: 15, mono: 1 }))),
     pts: [
       '<b>모달</b> — 같은 그룹의 다른 코드가 나올 때까지 <b>계속 살아 있다</b>',
       '<b>그룹 {{00}}</b> 은 그 블록에서만 듣는 <b>원샷(1회 유효)</b> 이다',
@@ -168,7 +175,7 @@
 
   L.push({
     u: U1, t: '주축 — 절삭속도 일정제어와 회전수 일정제어',
-    svg: svg(560, 176,
+    svg: shared('spindle', svg(560, 176,
       box(14, 20, 260, 146, C.paper, C.lathe, 14) +
       tx(144, 46, 'G96  절삭속도 일정제어', { size: 15, b: 1, a: 'middle', c: C.lathe }) +
       tx(144, 70, 'S = m/min', { size: 15, a: 'middle', mono: 1 }) +
@@ -181,7 +188,7 @@
       tx(416, 70, 'S = rpm', { size: 15, a: 'middle', mono: 1 }) +
       '<circle cx="362" cy="118" r="30" fill="#fff" stroke="' + C.mct + '" stroke-width="1.6"/>' +
       '<circle cx="468" cy="118" r="16" fill="#fff" stroke="' + C.mct + '" stroke-width="1.6"/>' +
-      tx(415, 160, '지름과 상관없이 같은 rpm', { size: 12, a: 'middle', c: C.dim })),
+      tx(415, 160, '지름과 상관없이 같은 rpm', { size: 12, a: 'middle', c: C.dim }))),
     pts: [
       '<b>G96</b> — 주축 <b>{{절삭속도}}</b> 일정제어. S 는 <b>{{m/min}}</b> 이다',
       '<b>G97</b> — 주축 <b>{{회전수}}</b> 일정제어. S 는 <b>{{rpm}}</b> 이다',

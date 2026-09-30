@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CNC·컴퓨터응용가공</title>
 <script src="https://hongyul67-cpu.github.io/links/fixorder.js"></script>
+<!-- 그림 — 배우기 화면이 처음 그려질 때 이미 있어야 한다(아래 인라인 스크립트보다 먼저). lesson.js 도 같은 그림을 쓴다 -->
+<script src="https://hongyul67-cpu.github.io/links/fig.js"></script>
+<script src="figs.js"></script>
 <style>
   :root{
     --bg:#f5f6f8; --card:#fff; --line:#e2e5ea; --tx:#1c2430; --dim:#6b7684;
@@ -68,6 +71,9 @@
   .unit .inner{padding:4px 18px 14px}
   .unit .inner .card{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:14px 0;margin:0}
   .unit .inner .card:last-child{border-bottom:0}
+  /* 배우기 그림 (figs.js · links/fig.js) — 제목 바로 아래, 누르면 크게 */
+  .learn-figs{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:8px 0 12px}
+  .learn-figs figure.fig{flex:1 1 300px;max-width:560px;margin:0}
 
   /* 코드 도감 */
   .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -1288,6 +1294,13 @@ function render(view){
   if(view==='wrong')    return renderWrong(v);
 }
 
+/* ── 배우기 카드에 붙는 그림 — figs.js 의 cards 가 카드 제목(t)과 같은 것 (누르면 크게) ── */
+function learnFigs(title){
+  if(!window.FIG || !window.FIGS) return '';
+  var keys = Object.keys(FIGS).filter(function(k){ return (FIGS[k].cards||[]).indexOf(title) >= 0; });
+  return keys.length ? '<div class="learn-figs">' + keys.map(function(k){ return FIG.figure(k); }).join('') + '</div>' : '';
+}
+
 /* ── 배우기 — 단원별로 접어 둔다 ── */
 function renderLearn(v){
   v.appendChild(el('<div class="card"><b>📖 먼저 여기부터 읽으세요.</b><br>' +
@@ -1303,7 +1316,7 @@ function renderLearn(v){
       '<div class="inner"></div></details>');
     var inner = d.querySelector('.inner');
     cards.forEach(function(c){
-      inner.appendChild(el('<div class="card"><h3>' + c.t + '</h3><div class="body">' + c.body + '</div></div>'));
+      inner.appendChild(el('<div class="card"><h3>' + c.t + '</h3>' + learnFigs(c.t) + '<div class="body">' + c.body + '</div></div>'));
     });
     v.appendChild(d);
   });
