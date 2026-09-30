@@ -39,7 +39,8 @@
   function svg(w, h, body) {
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" ' +
       'style="max-height:34vh" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">' +
-      /* 흰 종이 바탕 — 공용 뷰어의 그림 칸이 어두워 바탕이 없으면 회색 글자가 묻힌다 */
+      /* 슬라이드 그림에는 빈칸의 정답 코드를 쓰지 않는다 — G?? 로 두고 요점의 빈칸을 눌러 연다 */
+  /* 흰 종이 바탕 — 공용 뷰어의 그림 칸이 어두워 바탕이 없으면 회색 글자가 묻힌다 */
       '<rect x="1" y="1" width="' + (w - 2) + '" height="' + (h - 2) + '" rx="12" fill="#fff" stroke="#e5e7eb" stroke-width="2"/>' +
       body + '</svg>';
   }
@@ -153,12 +154,12 @@
       tx(280, 26, '표 1-12  CNC 선반과 머시닝센터의 이송 구분', { size: 15, b: 1, a: 'middle', c: C.dim }) +
       box(14, 40, 260, 130, C.latheBg, C.lathe, 14) +
       tx(144, 66, 'CNC 선반', { size: 16, b: 1, a: 'middle', c: C.lathe }) +
-      tx(40, 104, 'G98', { size: 24, b: 1, c: C.lathe, mono: 1 }) + tx(112, 104, '분당 이송 mm/min', { size: 15 }) +
-      tx(40, 142, 'G99', { size: 24, b: 1, c: C.lathe, mono: 1 }) + tx(112, 142, '회전당 이송 mm/rev', { size: 15 }) +
+      tx(40, 104, 'G??', { size: 24, b: 1, c: C.lathe, mono: 1 }) + tx(112, 104, '분당 이송 mm/min', { size: 15 }) +
+      tx(40, 142, 'G??', { size: 24, b: 1, c: C.lathe, mono: 1 }) + tx(112, 142, '회전당 이송 mm/rev', { size: 15 }) +
       box(286, 40, 260, 130, C.mctBg, C.mct, 14) +
       tx(416, 66, '머시닝센터', { size: 16, b: 1, a: 'middle', c: C.mct }) +
-      tx(312, 104, 'G94', { size: 24, b: 1, c: C.mct, mono: 1 }) + tx(384, 104, '분당 이송 mm/min', { size: 15 }) +
-      tx(312, 142, 'G95', { size: 24, b: 1, c: C.mct, mono: 1 }) + tx(384, 142, '회전당 이송 mm/rev', { size: 15 })),
+      tx(312, 104, 'G??', { size: 24, b: 1, c: C.mct, mono: 1 }) + tx(384, 104, '분당 이송 mm/min', { size: 15 }) +
+      tx(312, 142, 'G??', { size: 24, b: 1, c: C.mct, mono: 1 }) + tx(384, 142, '회전당 이송 mm/rev', { size: 15 })),
     pts: [
       '이송은 어드레스 <b>F</b> 로 준다. 그런데 F 의 <b>단위</b>를 정하는 코드가 기계마다 다르다',
       'CNC 선반 — 분당이송 {{G98}} · 회전당이송 {{G99}}',
@@ -207,7 +208,7 @@
     u: U1, t: '보정 — 켰으면 반드시 끈다',
     svg: svg(560, 168,
       box(16, 28, 168, 116, C.paper, C.ok, 14) +
-      tx(100, 56, 'G41 / G42', { size: 20, b: 1, a: 'middle', c: C.ok, mono: 1 }) +
+      tx(100, 56, 'G?? / G??', { size: 20, b: 1, a: 'middle', c: C.ok, mono: 1 }) +
       tx(100, 84, '보정 켜기', { size: 15, a: 'middle' }) +
       tx(100, 112, '좌측 / 우측', { size: 13, a: 'middle', c: C.dim }) +
       tx(100, 134, '진행방향 기준', { size: 12, a: 'middle', c: C.dim }) +
@@ -217,14 +218,14 @@
       tx(302, 104, '…', { size: 22, a: 'middle', c: C.dim }) +
       tx(398, 92, '→', { size: 30, a: 'middle', c: C.dim }) +
       box(420, 28, 124, 116, '#fef2f2', C.warn, 14) +
-      tx(482, 56, 'G40', { size: 20, b: 1, a: 'middle', c: C.warn, mono: 1 }) +
+      tx(482, 56, 'G??', { size: 20, b: 1, a: 'middle', c: C.warn, mono: 1 }) +
       tx(482, 84, '보정 끄기', { size: 15, a: 'middle' }) +
       tx(482, 118, '안 끄면 사고', { size: 13, a: 'middle', c: C.warn })),
     pts: [
       '보정을 켜는 것은 <b>{{G41}}</b>(좌측) · <b>{{G42}}</b>(우측), 끄는 것은 <b>{{G40}}</b> 이다',
       '좌·우는 <b>공구가 나아가는 방향을 기준</b>으로 본다',
       '이름이 기계마다 다르다 — 선반은 <b>{{공구 인선 반지름 보정}}</b>, 머시닝센터는 <b>{{공구경 보정}}</b>',
-      '<span style="color:#dc2626">가공이 끝나면 <b>반드시 G40 으로 취소</b></span> 한다. 켜 둔 채 원점으로 보내면 엉뚱한 곳으로 간다'
+      '<span style="color:#dc2626">가공이 끝나면 <b>반드시 보정을 취소</b></span> 한다. 켜 둔 채 원점으로 보내면 엉뚱한 곳으로 간다'
     ],
     ask: '보정을 켜 둔 채로 다음 공구를 부르면 무슨 일이 생길까요?'
   });
